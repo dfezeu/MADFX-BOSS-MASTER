@@ -1,0 +1,28 @@
+{
+“name”: “madfx-boss-backend”,
+“version”: “1.0.0”,
+“description”: “MADFX BOSS — Arb Signal Engine Backend API”,
+“license”: “UNLICENSED”,
+“private”: true,
+“scripts”: {
+“start”: “node dist/main.js”,
+“start:dev”: “nodemon src/main.js”,
+“build”: “tsc”,
+“test”: “jest”
+},
+“dependencies”: {
+“@elastic/elasticsearch”: “^8.12.0”,
+“@supabase/supabase-js”: “^2.39.0”,
+“axios”: “^1.6.0”,
+“cors”: “^2.8.5”,
+“dotenv”: “^16.3.0”,
+“express”: “^4.18.0”,
+“ioredis”: “^5.3.0”,
+“openai”: “^4.28.0”,
+“ws”: “^8.16.0”
+},
+“devDependencies”: {
+“jest”: “^29.0.0”,
+“nodemon”: “^3.0.0”
+}
+}
