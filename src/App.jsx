@@ -1,15 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import HarmonicPatternDetector from "./components/HarmonicPatternDetector";
 import TGRRLoop from "./components/TGRRLoop";
 import PropFirmComplianceChecker from "./components/PropFirmComplianceChecker";
 import ArbitrageScanner from "./components/ArbitrageScanner";
 import CharityVault from "./components/CharityVault";
+import AgentMarketplace from "./components/AgentMarketplace";
+import TradingDashboard from "./components/TradingDashboard";
+import PoolFarming from "./components/PoolFarming";
+import Leaderboard from "./components/Leaderboard";
+import LiveMarketFeed from "./components/LiveMarketFeed";
+import TokenSystem from "./components/TokenSystem";
+import Chillverse from "./components/Chillverse";
 
 export default function App() {
-  const [aiResponse, setAiResponse] = useState("");
   const [loading, setLoading] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [model, setModel] = useState("mistral");
+  const [activeTab, setActiveTab] = useState("dashboard");
 
   const askOllama = async (customPrompt) => {
     setLoading(true);
@@ -26,74 +33,160 @@ export default function App() {
       const data = await res.json();
       return data.response;
     } catch (err) {
-      return "⚠️ Ollama not reachable. Make sure it's running.";
+      return "Ollama not reachable. Make sure it's running.";
     } finally {
       setLoading(false);
     }
   };
 
   const handleAskOllama = async () => {
-    const response = await askOllama();
-    setAiResponse(response);
+    await askOllama();
+  };
 
-  return (
-    <div style={{ background: "#0a0a0a", minHeight: "100vh", color: "#00ff88", fontFamily: "monospace", padding: "20px" }}>
-      <h1 style={{ color: "#00ff88", borderBottom: "1px solid #00ff88", paddingBottom: "10px" }}>
-        ⚡ MADFX BOSS — NEXUS ENGINE
-      </h1>
-      <p style={{ color: "#888" }}>TGRR Loop: Trade → Generate → Reward → Reinvest</p>
+  const tabs = [
+    { id: "dashboard", label: "Dashboard", icon: "◈" },
+    { id: "markets", label: "Markets", icon: "◉" },
+    { id: "trading", label: "Trading", icon: "⇄" },
+    { id: "agents", label: "AI Agents", icon: "◉" },
+    { id: "pools", label: "LP Farms", icon: "⬡" },
+    { id: "leaderboard", label: "Leaderboard", icon: "♔" },
+    { id: "token", label: "NXUS", icon: "◉" },
+    { id: "chillverse", label: "Chillverse", icon: "♠" },
+    { id: "signals", label: "Signals", icon: "◎" }
+  ];
 
-      <div style={{ marginTop: "30px", background: "#111", padding: "20px", borderRadius: "8px", border: "1px solid #00ff8833" }}>
-        <h2 style={{ color: "#00aaff" }}>🤖 MADXAI Local Intelligence</h2>
-        <select
-          value={model}
-          onChange={e => setModel(e.target.value)}
-          style={{ background: "#222", color: "#00ff88", border: "1px solid #00ff88", padding: "8px", marginBottom: "10px", width: "100%" }}>
-          <option value="mistral">Mistral 7B</option>
-          <option value="llama3">LLaMA 3</option>
-          <option value="tinyllama">TinyLlama (fastest)</option>
-        </select>
-        <textarea
-          value={prompt}
-          onChange={e => setPrompt(e.target.value)}
-          placeholder="Ask MADXAI anything... e.g. Analyze EUR/USD for a bullish Gartley setup"
-          style={{ width: "100%", height: "100px", background: "#222", color: "#fff", border: "1px solid #333", padding: "10px", borderRadius: "4px" }}
-        />
-        <button
-          onClick={handleAskOllama}
-          disabled={loading}
-          style={{ marginTop: "10px", background: "#00ff88", color: "#000", border: "none", padding: "12px 24px", borderRadius: "4px", cursor: "pointer", fontWeight: "bold", width: "100%" }}>
-          {loading ? "⏳ Analyzing..." : "⚡ Run MADXAI Analysis"}
-        </button>
-        {aiResponse && (
-          <div style={{ marginTop: "20px", background: "#0d1f0d", padding: "15px", borderRadius: "4px", border: "1px solid #00ff88", whiteSpace: "pre-wrap" }}>
-            {aiResponse}
-          </div>
-        )}
-      </div>
+  return (
+    <div style={{ background: "#030712", minHeight: "100vh", fontFamily: "'Space Grotesk', sans-serif" }}>
+      <nav style={{ 
+        background: "rgba(3, 7, 18, 0.9)", 
+        backdropFilter: "blur(20px)",
+        borderBottom: "1px solid #1e293b",
+        padding: "0 20px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        position: "sticky",
+        top: 0,
+        zIndex: 100
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "20px", padding: "15px 0" }}>
+          <h1 style={{ 
+            background: "linear-gradient(135deg, #00ff88, #00d4ff)", 
+            WebkitBackgroundClip: "text", 
+            WebkitTextFillColor: "transparent", 
+            fontSize: "20px", 
+            fontWeight: "700",
+            letterSpacing: "-0.5px"
+          }}>
+            MADFX BOSS
+          </h1>
+          <span style={{ color: "#1e293b", fontSize: "20px" }}>|</span>
+          <div style={{ display: "flex", gap: "4px" }}>
+            {tabs.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                style={{
+                  background: activeTab === tab.id ? "rgba(0, 255, 136, 0.1)" : "transparent",
+                  color: activeTab === tab.id ? "#00ff88" : "#64748b",
+                  border: "none",
+                  padding: "8px 14px",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                  fontSize: "12px",
+                  fontWeight: activeTab === tab.id ? "600" : "400",
+                  transition: "all 0.2s"
+                }}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#00ff88" }}>
+            <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#00ff88", boxShadow: "0 0 8px #00ff88" }}></div>
+            <span style={{ fontSize: "11px", fontWeight: "500" }}>LIVE</span>
+          </div>
+          <select
+            value={model}
+            onChange={(e) => setModel(e.target.value)}
+            style={{ background: "#0f172a", color: "#00ff88", border: "1px solid #1e293b", padding: "6px 10px", borderRadius: "6px", fontSize: "11px" }}
+          >
+            <option value="mistral">Mistral</option>
+            <option value="llama3">LLaMA 3</option>
+            <option value="llama3.1">LLaMA 3.1</option>
+            <option value="codellama">CodeLlama</option>
+            <option value="tinyllama">TinyLlama</option>
+          </select>
+          <div style={{ background: "linear-gradient(135deg, #ffd700, #ff8800)", padding: "6px 12px", borderRadius: "6px" }}>
+            <span style={{ color: "#000", fontSize: "12px", fontWeight: "700" }}>12,450 AURA</span>
+          </div>
+        </div>
+      </nav>
 
-      <HarmonicPatternDetector askOllama={askOllama} loading={loading} />
+      <main style={{ padding: "20px", maxWidth: "1600px", margin: "0 auto" }}>
+        {activeTab === "dashboard" && (
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 380px", gap: "20px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+              <LiveMarketFeed />
+              <Leaderboard askOllama={askOllama} loading={loading} />
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+              <TradingDashboard askOllama={askOllama} loading={loading} />
+            </div>
+          </div>
+        )}
 
-      <TGRRLoop askOllama={askOllama} loading={loading} />
+        {activeTab === "markets" && <LiveMarketFeed />}
+        
+        {activeTab === "trading" && <TradingDashboard askOllama={askOllama} loading={loading} />}
+        
+        {activeTab === "agents" && <AgentMarketplace askOllama={askOllama} loading={loading} />}
+        
+        {activeTab === "pools" && <PoolFarming askOllama={askOllama} loading={loading} />}
+        
+        {activeTab === "leaderboard" && <Leaderboard askOllama={askOllama} loading={loading} />}
+        
+        {activeTab === "token" && <TokenSystem />}
+        
+        {activeTab === "chillverse" && <Chillverse />}
+        
+        {activeTab === "signals" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+            <HarmonicPatternDetector askOllama={askOllama} loading={loading} />
+            <TGRRLoop askOllama={askOllama} loading={loading} />
+            <PropFirmComplianceChecker askOllama={askOllama} loading={loading} />
+            <ArbitrageScanner askOllama={askOllama} loading={loading} />
+            <CharityVault />
+          </div>
+        )}
 
-      <PropFirmComplianceChecker askOllama={askOllama} loading={loading} />
-
-      <ArbitrageScanner askOllama={askOllama} loading={loading} />
-
-      <CharityVault />
-
-      <div style={{ marginTop: "20px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "15px" }}>
-        {[
-          { label: "TGRR Status", value: "ACTIVE", color: "#00ff88" },
-          { label: "Ollama Model", value: model.toUpperCase(), color: "#00aaff" },
-          { label: "Mode", value: "LOCAL AI", color: "#ff8800" }
-        ].map(card => (
-          <div key={card.label} style={{ background: "#111", padding: "15px", borderRadius: "8px", border: `1px solid ${card.color}33`, textAlign: "center" }}>
-            <div style={{ color: "#888", fontSize: "12px" }}>{card.label}</div>
-            <div style={{ color: card.color, fontSize: "20px", fontWeight: "bold" }}>{card.value}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+        <div style={{ marginTop: "20px", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "15px" }}>
+          {[
+            { label: "TGRR", value: "ACTIVE", color: "#00ff88", icon: "⟳" },
+            { label: "AI", value: model.toUpperCase(), color: "#00d4ff", icon: "◆" },
+            { label: "NETWORK", value: "MAINNET", color: "#00ff88", icon: "⬡" },
+            { label: "VERSION", value: "v2.0", color: "#a855f7", icon: "◆" }
+          ].map(stat => (
+            <div key={stat.label} style={{ 
+              background: "rgba(15, 23, 42, 0.6)", 
+              padding: "15px 20px", 
+              borderRadius: "12px", 
+              border: "1px solid #1e293b",
+              display: "flex",
+              alignItems: "center",
+              gap: "12px"
+            }}>
+              <span style={{ color: stat.color, fontSize: "16px" }}>{stat.icon}</span>
+              <div>
+                <div style={{ color: "#64748b", fontSize: "10px" }}>{stat.label}</div>
+                <div style={{ color: stat.color, fontWeight: "600", fontSize: "14px" }}>{stat.value}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </main>
+    </div>
+  );
 }
