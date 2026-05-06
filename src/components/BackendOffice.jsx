@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import InfrastructureHub from "./InfrastructureHub";
+import SalesHub from "./SalesHub";
 
 export default function BackendOffice() {
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -54,6 +56,8 @@ export default function BackendOffice() {
     retention: 89
   });
 
+  const [enterpriseTab, setEnterpriseTab] = useState("crm");
+
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
@@ -64,7 +68,7 @@ export default function BackendOffice() {
     if (status === "warm") return "#f59e0b";
     if (status === "cold") return "#3b82f6";
     if (status === "closed") return "#10b981";
-    return "#6b7280";
+    return "#64748b";
   };
 
   const getStageColor = (stage) => {
@@ -72,7 +76,7 @@ export default function BackendOffice() {
     if (stage === "negotiation") return "#f59e0b";
     if (stage === "proposal") return "#3b82f6";
     if (stage === "qualified") return "#8b5cf6";
-    return "#6b7280";
+    return "#64748b";
   };
 
   const filteredContacts = contacts.filter(c => 
@@ -87,9 +91,9 @@ export default function BackendOffice() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
           <div>
             <h1 style={{ color: "#d4a012", fontSize: "28px", fontWeight: "700", letterSpacing: "0.5px" }}>
-              EINSTEIN CRM BACKEND
+              ENTERPRISE COMMAND CENTER
             </h1>
-            <p style={{ color: "#64748b", fontSize: "14px" }}>Cloud Security • Sales Intelligence • CX Data Management</p>
+            <p style={{ color: "#64748b", fontSize: "14px" }}>AI Employees • Infrastructure • Sales • Analytics</p>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
             <div style={{ textAlign: "right" }}>
@@ -135,23 +139,23 @@ export default function BackendOffice() {
 
       <div style={{ display: "grid", gridTemplateColumns: "250px 1fr", gap: "20px" }}>
         <div style={{ background: "#0d1525", borderRadius: "12px", border: "1px solid #1e3a5f", padding: "15px" }}>
-          <h3 style={{ color: "#64748b", fontSize: "11px", textTransform: "uppercase", marginBottom: "15px" }}>Navigation</h3>
+          <h3 style={{ color: "#64748b", fontSize: "11px", textTransform: "uppercase", marginBottom: "15px" }}>Enterprise Suites</h3>
           {[
-            { id: "dashboard", icon: "◈", label: "Dashboard" },
-            { id: "contacts", icon: "◉", label: "Contacts" },
-            { id: "deals", icon: "⇄", label: "Deals Pipeline" },
+            { id: "crm", icon: "💼", label: "Sales CRM" },
+            { id: "infrastructure", icon: "🏗", label: "Infrastructure" },
+            { id: "leads", icon: "🎯", label: "Sales & Leads" },
             { id: "tasks", icon: "✓", label: "Tasks" },
-            { id: "security", icon: "◈", label: "Security Center" },
-            { id: "analytics", icon: "◉", label: "CX Analytics" },
-            { id: "ai", icon: "◆", label: "AI Insights" }
+            { id: "security", icon: "🔐", label: "Security" },
+            { id: "analytics", icon: "📊", label: "Analytics" },
+            { id: "ai", icon: "🤖", label: "AI Insights" }
           ].map(item => (
             <button
               key={item.id}
-              onClick={() => setActiveSection(item.id)}
+              onClick={() => setEnterpriseTab(item.id)}
               style={{
                 width: "100%",
-                background: activeSection === item.id ? "rgba(212, 160, 18, 0.15)" : "transparent",
-                color: activeSection === item.id ? "#d4a012" : "#64748b",
+                background: enterpriseTab === item.id ? "rgba(212, 160, 18, 0.15)" : "transparent",
+                color: enterpriseTab === item.id ? "#d4a012" : "#64748b",
                 border: "none",
                 padding: "12px 15px",
                 borderRadius: "8px",
@@ -165,14 +169,14 @@ export default function BackendOffice() {
                 gap: "10px"
               }}
             >
-              <span style={{ color: activeSection === item.id ? "#d4a012" : "#3b82f6" }}>{item.icon}</span>
+              <span style={{ color: enterpriseTab === item.id ? "#d4a012" : "#3b82f6" }}>{item.icon}</span>
               {item.label}
             </button>
           ))}
         </div>
 
         <div>
-          {activeSection === "dashboard" && (
+          {enterpriseTab === "crm" && (
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
               <div style={{ background: "#0d1525", borderRadius: "12px", border: "1px solid #1e3a5f", padding: "20px" }}>
                 <h3 style={{ color: "#10b981", marginBottom: "15px" }}>Recent Contacts</h3>
@@ -207,72 +211,11 @@ export default function BackendOffice() {
             </div>
           )}
 
-          {activeSection === "contacts" && (
-            <div style={{ background: "#0d1525", borderRadius: "12px", border: "1px solid #1e3a5f", padding: "20px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-                <h3 style={{ color: "#d4a012" }}>Contacts</h3>
-                <input
-                  type="text"
-                  placeholder="Search contacts..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  style={{ background: "#1e3a5f", border: "1px solid #2d4a6f", padding: "8px 15px", borderRadius: "8px", color: "#fff", fontSize: "13px", width: "250px" }}
-                />
-              </div>
-              <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                <thead>
-                  <tr style={{ borderBottom: "1px solid #1e3a5f" }}>
-                    <th style={{ padding: "12px", textAlign: "left", color: "#64748b", fontSize: "11px" }}>NAME</th>
-                    <th style={{ padding: "12px", textAlign: "left", color: "#64748b", fontSize: "11px" }}>COMPANY</th>
-                    <th style={{ padding: "12px", textAlign: "left", color: "#64748b", fontSize: "11px" }}>EMAIL</th>
-                    <th style={{ padding: "12px", textAlign: "center", color: "#64748b", fontSize: "11px" }}>STATUS</th>
-                    <th style={{ padding: "12px", textAlign: "right", color: "#64748b", fontSize: "11px" }}>VALUE</th>
-                    <th style={{ padding: "12px", textAlign: "right", color: "#64748b", fontSize: "11px" }}>LAST</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredContacts.map(c => (
-                    <tr key={c.id} style={{ borderBottom: "1px solid #1e3a5f" }}>
-                      <td style={{ padding: "12px", color: "#fff", fontWeight: "500" }}>{c.name}</td>
-                      <td style={{ padding: "12px", color: "#64748b" }}>{c.company}</td>
-                      <td style={{ padding: "12px", color: "#3b82f6" }}>{c.email}</td>
-                      <td style={{ padding: "12px", textAlign: "center" }}>
-                        <span style={{ color: getStatusColor(c.status), fontSize: "11px", textTransform: "uppercase", background: `${getStatusColor(c.status)}20`, padding: "4px 8px", borderRadius: "4px" }}>{c.status}</span>
-                      </td>
-                      <td style={{ padding: "12px", textAlign: "right", color: "#10b981" }}>${c.value.toLocaleString()}</td>
-                      <td style={{ padding: "12px", textAlign: "right", color: "#64748b" }}>{c.lastContact}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+          {enterpriseTab === "infrastructure" && <InfrastructureHub />}
+          
+          {enterpriseTab === "leads" && <SalesHub />}
 
-          {activeSection === "deals" && (
-            <div style={{ background: "#0d1525", borderRadius: "12px", border: "1px solid #1e3a5f", padding: "20px" }}>
-              <h3 style={{ color: "#d4a012", marginBottom: "20px" }}>Deals Pipeline</h3>
-              {deals.map(d => (
-                <div key={d.id} style={{ background: "#1e3a5f", padding: "15px", borderRadius: "8px", marginBottom: "10px" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
-                    <div>
-                      <span style={{ color: "#fff", fontWeight: "600" }}>{d.name}</span>
-                      <span style={{ color: "#64748b", marginLeft: "10px", fontSize: "12px" }}>Owner: {d.owner}</span>
-                    </div>
-                    <span style={{ color: "#10b981", fontWeight: "700", fontSize: "18px" }}>${d.value.toLocaleString()}</span>
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-                    <span style={{ color: getStageColor(d.stage), fontSize: "12px", textTransform: "uppercase" }}>{d.stage}</span>
-                    <div style={{ flex: 1, height: "6px", background: "#0d1525", borderRadius: "3px", overflow: "hidden" }}>
-                      <div style={{ width: `${d.probability}%`, height: "100%", background: d.stage === "closed" ? "#10b981" : "linear-gradient(90deg, #d4a012, #3b82f6)", borderRadius: "3px" }}></div>
-                    </div>
-                    <span style={{ color: "#64748b", fontSize: "12px" }}>{d.probability}% • {d.closeDate}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {activeSection === "tasks" && (
+          {enterpriseTab === "tasks" && (
             <div style={{ background: "#0d1525", borderRadius: "12px", border: "1px solid #1e3a5f", padding: "20px" }}>
               <h3 style={{ color: "#d4a012", marginBottom: "20px" }}>Tasks</h3>
               {tasks.map(task => (
@@ -317,7 +260,7 @@ export default function BackendOffice() {
             </div>
           )}
 
-          {activeSection === "security" && (
+          {enterpriseTab === "security" && (
             <div style={{ background: "#0d1525", borderRadius: "12px", border: "1px solid #1e3a5f", padding: "20px" }}>
               <h3 style={{ color: "#ef4444", marginBottom: "20px" }}>Security Center</h3>
               <div style={{ display: "grid", gap: "10px" }}>
@@ -353,16 +296,16 @@ export default function BackendOffice() {
             </div>
           )}
 
-          {activeSection === "analytics" && (
+          {enterpriseTab === "analytics" && (
             <div style={{ background: "#0d1525", borderRadius: "12px", border: "1px solid #1e3a5f", padding: "20px" }}>
               <h3 style={{ color: "#3b82f6", marginBottom: "20px" }}>CX Analytics</h3>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "15px" }}>
                 {[
                   { label: "NPS Score", value: cxMetrics.nps, color: "#10b981" },
                   { label: "Satisfaction", value: cxMetrics.satisfaction + "%", color: "#3b82f6" },
-                  { label: "Response Time", value: cxMetrics.responseTime, color: "#8b5cf6" },
-                  { label: "First Contact", value: cxMetrics.firstContact + "%", color: "#d4a012" },
-                  { label: "Retention", value: cxMetrics.retention + "%", color: "#f59e0b" }
+                  { label: "Avg Response Time", value: cxMetrics.responseTime, color: "#8b5cf6" },
+                  { label: "First Contact Resolution", value: cxMetrics.firstContact + "%", color: "#d4a012" },
+                  { label: "Retention Rate", value: cxMetrics.retention + "%", color: "#f59e0b" }
                 ].map(metric => (
                   <div key={metric.label} style={{ background: "#1e3a5f", padding: "20px", borderRadius: "10px", textAlign: "center" }}>
                     <div style={{ color: metric.color, fontSize: "28px", fontWeight: "700" }}>{metric.value}</div>
@@ -373,7 +316,7 @@ export default function BackendOffice() {
             </div>
           )}
 
-          {activeSection === "ai" && (
+          {enterpriseTab === "ai" && (
             <div style={{ background: "linear-gradient(135deg, rgba(212, 160, 18, 0.1), rgba(59, 130, 246, 0.1))", borderRadius: "12px", border: "1px solid #d4a012", padding: "30px", textAlign: "center" }}>
               <h3 style={{ color: "#d4a012", marginBottom: "20px", fontSize: "24px" }}>Einstein AI Insights</h3>
               <div style={{ color: "#fff", fontSize: "16px", lineHeight: "1.8", marginBottom: "20px" }}>
