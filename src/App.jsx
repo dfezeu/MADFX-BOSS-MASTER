@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HarmonicPatternDetector from "./components/HarmonicPatternDetector";
 import TGRRLoop from "./components/TGRRLoop";
 import PropFirmComplianceChecker from "./components/PropFirmComplianceChecker";
@@ -11,12 +11,15 @@ import Leaderboard from "./components/Leaderboard";
 import LiveMarketFeed from "./components/LiveMarketFeed";
 import TokenSystem from "./components/TokenSystem";
 import Chillverse from "./components/Chillverse";
+import BackendOffice from "./components/BackendOffice";
 
 export default function App() {
   const [loading, setLoading] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [model, setModel] = useState("mistral");
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [secretAccess, setSecretAccess] = useState(false);
+  const [adminAuth, setAdminAuth] = useState(false);
 
   const askOllama = async (customPrompt) => {
     setLoading(true);
@@ -39,8 +42,22 @@ export default function App() {
     }
   };
 
-  const handleAskOllama = async () => {
-    await askOllama();
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.key === "Escape") {
+        setAdminAuth(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, []);
+
+  const handleSecretAccess = () => {
+    const code = prompt("Enter admin access code:");
+    if (code === "MADFXBOSS2026" || code === "DYLANN") {
+      setAdminAuth(true);
+      setActiveTab("admin");
+    }
   };
 
   const tabs = [
@@ -54,6 +71,10 @@ export default function App() {
     { id: "chillverse", label: "Chillverse", icon: "♠" },
     { id: "signals", label: "Signals", icon: "◎" }
   ];
+
+  if (adminAuth && activeTab === "admin") {
+    return <BackendOffice />;
+  }
 
   return (
     <div style={{ background: "#030712", minHeight: "100vh", fontFamily: "'Space Grotesk', sans-serif" }}>
@@ -119,7 +140,7 @@ export default function App() {
             <option value="codellama">CodeLlama</option>
             <option value="tinyllama">TinyLlama</option>
           </select>
-          <div style={{ background: "linear-gradient(135deg, #ffd700, #ff8800)", padding: "6px 12px", borderRadius: "6px" }}>
+          <div style={{ background: "linear-gradient(135deg, #ffd700, #ff8800)", padding: "6px 12px", borderRadius: "6px", cursor: "pointer" }} onClick={handleSecretAccess}>
             <span style={{ color: "#000", fontSize: "12px", fontWeight: "700" }}>12,450 AURA</span>
           </div>
         </div>
@@ -167,17 +188,22 @@ export default function App() {
             { label: "TGRR", value: "ACTIVE", color: "#00ff88", icon: "⟳" },
             { label: "AI", value: model.toUpperCase(), color: "#00d4ff", icon: "◆" },
             { label: "NETWORK", value: "MAINNET", color: "#00ff88", icon: "⬡" },
-            { label: "VERSION", value: "v2.0", color: "#a855f7", icon: "◆" }
+            { label: "VERSION", value: "v2.1", color: "#a855f7", icon: "◆" }
           ].map(stat => (
-            <div key={stat.label} style={{ 
-              background: "rgba(15, 23, 42, 0.6)", 
-              padding: "15px 20px", 
-              borderRadius: "12px", 
-              border: "1px solid #1e293b",
-              display: "flex",
-              alignItems: "center",
-              gap: "12px"
-            }}>
+            <div 
+              key={stat.label} 
+              style={{ 
+                background: "rgba(15, 23, 42, 0.6)", 
+                padding: "15px 20px", 
+                borderRadius: "12px", 
+                border: "1px solid #1e293b",
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                cursor: stat.label === "VERSION" ? "pointer" : "default"
+              }}
+              onClick={stat.label === "VERSION" ? handleSecretAccess : undefined}
+            >
               <span style={{ color: stat.color, fontSize: "16px" }}>{stat.icon}</span>
               <div>
                 <div style={{ color: "#64748b", fontSize: "10px" }}>{stat.label}</div>
