@@ -12,13 +12,17 @@ import LiveMarketFeed from "./components/LiveMarketFeed";
 import TokenSystem from "./components/TokenSystem";
 import Chillverse from "./components/Chillverse";
 import BackendOffice from "./components/BackendOffice";
+import TGRRTokenomics from "./components/TGRRTokenomics";
+import MarketScanner from "./components/MarketScanner";
+import SportsPrediction from "./components/SportsPrediction";
+import UpgradeSystem from "./components/UpgradeSystem";
+import MAXAITrader from "./components/MAXAITrader";
 
 export default function App() {
   const [loading, setLoading] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [model, setModel] = useState("mistral");
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [secretAccess, setSecretAccess] = useState(false);
   const [adminAuth, setAdminAuth] = useState(false);
 
   const askOllama = async (customPrompt) => {
@@ -42,16 +46,6 @@ export default function App() {
     }
   };
 
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      if (e.key === "Escape") {
-        setAdminAuth(false);
-      }
-    };
-    window.addEventListener("keydown", handleKeyPress);
-    return () => window.removeEventListener("keydown", handleKeyPress);
-  }, []);
-
   const handleSecretAccess = () => {
     const code = prompt("Enter admin access code:");
     if (code === "MADFXBOSS2026" || code === "DYLANN") {
@@ -61,15 +55,20 @@ export default function App() {
   };
 
   const tabs = [
-    { id: "dashboard", label: "Dashboard", icon: "◈" },
-    { id: "markets", label: "Markets", icon: "◉" },
-    { id: "trading", label: "Trading", icon: "⇄" },
-    { id: "agents", label: "AI Agents", icon: "◉" },
-    { id: "pools", label: "LP Farms", icon: "⬡" },
-    { id: "leaderboard", label: "Leaderboard", icon: "♔" },
-    { id: "token", label: "NXUS", icon: "◉" },
-    { id: "chillverse", label: "Chillverse", icon: "♠" },
-    { id: "signals", label: "Signals", icon: "◎" }
+    { id: "dashboard", label: "Dashboard" },
+    { id: "markets", label: "Markets" },
+    { id: "scanner", label: "Scanner" },
+    { id: "sports", label: "Sports" },
+    { id: "trading", label: "Trading" },
+    { id: "agents", label: "AI Agents" },
+    { id: "maxai", label: "MAXAI" },
+    { id: "pools", label: "LP Farms" },
+    { id: "token", label: "NXUS" },
+    { id: "tgrr", label: "TGRR" },
+    { id: "leaderboard", label: "Copy" },
+    { id: "upgrade", label: "Pro" },
+    { id: "chillverse", label: "Casino" },
+    { id: "signals", label: "Signals" }
   ];
 
   if (adminAuth && activeTab === "admin") {
@@ -77,11 +76,11 @@ export default function App() {
   }
 
   return (
-    <div style={{ background: "#030712", minHeight: "100vh", fontFamily: "'Space Grotesk', sans-serif" }}>
+    <div style={{ background: "#0a0f1a", minHeight: "100vh", fontFamily: "'Space Grotesk', sans-serif" }}>
       <nav style={{ 
-        background: "rgba(3, 7, 18, 0.9)", 
+        background: "rgba(13, 21, 37, 0.95)", 
         backdropFilter: "blur(20px)",
-        borderBottom: "1px solid #1e293b",
+        borderBottom: "1px solid #1e3a5f",
         padding: "0 20px",
         display: "flex",
         alignItems: "center",
@@ -91,32 +90,24 @@ export default function App() {
         zIndex: 100
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "20px", padding: "15px 0" }}>
-          <h1 style={{ 
-            background: "linear-gradient(135deg, #00ff88, #00d4ff)", 
-            WebkitBackgroundClip: "text", 
-            WebkitTextFillColor: "transparent", 
-            fontSize: "20px", 
-            fontWeight: "700",
-            letterSpacing: "-0.5px"
-          }}>
+          <h1 style={{ color: "#d4a012", fontSize: "20px", fontWeight: "700", letterSpacing: "0.5px" }}>
             MADFX BOSS
           </h1>
-          <span style={{ color: "#1e293b", fontSize: "20px" }}>|</span>
+          <span style={{ color: "#1e3a5f", fontSize: "20px" }}>|</span>
           <div style={{ display: "flex", gap: "4px" }}>
             {tabs.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 style={{
-                  background: activeTab === tab.id ? "rgba(0, 255, 136, 0.1)" : "transparent",
-                  color: activeTab === tab.id ? "#00ff88" : "#64748b",
+                  background: activeTab === tab.id ? "rgba(59, 130, 246, 0.15)" : "transparent",
+                  color: activeTab === tab.id ? "#3b82f6" : "#64748b",
                   border: "none",
                   padding: "8px 14px",
                   borderRadius: "6px",
                   cursor: "pointer",
                   fontSize: "12px",
-                  fontWeight: activeTab === tab.id ? "600" : "400",
-                  transition: "all 0.2s"
+                  fontWeight: activeTab === tab.id ? "600" : "400"
                 }}
               >
                 {tab.label}
@@ -125,14 +116,14 @@ export default function App() {
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#00ff88" }}>
-            <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#00ff88", boxShadow: "0 0 8px #00ff88" }}></div>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#10b981" }}>
+            <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#10b981" }}></div>
             <span style={{ fontSize: "11px", fontWeight: "500" }}>LIVE</span>
           </div>
           <select
             value={model}
             onChange={(e) => setModel(e.target.value)}
-            style={{ background: "#0f172a", color: "#00ff88", border: "1px solid #1e293b", padding: "6px 10px", borderRadius: "6px", fontSize: "11px" }}
+            style={{ background: "#0d1525", color: "#3b82f6", border: "1px solid #1e3a5f", padding: "6px 10px", borderRadius: "6px", fontSize: "11px" }}
           >
             <option value="mistral">Mistral</option>
             <option value="llama3">LLaMA 3</option>
@@ -140,8 +131,8 @@ export default function App() {
             <option value="codellama">CodeLlama</option>
             <option value="tinyllama">TinyLlama</option>
           </select>
-          <div style={{ background: "linear-gradient(135deg, #ffd700, #ff8800)", padding: "6px 12px", borderRadius: "6px", cursor: "pointer" }} onClick={handleSecretAccess}>
-            <span style={{ color: "#000", fontSize: "12px", fontWeight: "700" }}>12,450 AURA</span>
+          <div style={{ background: "linear-gradient(135deg, #d4a012, #b8860b)", padding: "6px 12px", borderRadius: "6px", cursor: "pointer" }} onClick={handleSecretAccess}>
+            <span style={{ color: "#0a0f1a", fontSize: "12px", fontWeight: "700" }}>12,450 AURA</span>
           </div>
         </div>
       </nav>
@@ -150,7 +141,7 @@ export default function App() {
         {activeTab === "dashboard" && (
           <div style={{ display: "grid", gridTemplateColumns: "1fr 380px", gap: "20px" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-              <LiveMarketFeed />
+              <MarketScanner />
               <Leaderboard askOllama={askOllama} loading={loading} />
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -161,15 +152,25 @@ export default function App() {
 
         {activeTab === "markets" && <LiveMarketFeed />}
         
+        {activeTab === "scanner" && <MarketScanner />}
+        
+        {activeTab === "sports" && <SportsPrediction />}
+        
         {activeTab === "trading" && <TradingDashboard askOllama={askOllama} loading={loading} />}
         
         {activeTab === "agents" && <AgentMarketplace askOllama={askOllama} loading={loading} />}
         
+        {activeTab === "maxai" && <MAXAITrader askOllama={askOllama} loading={loading} />}
+        
         {activeTab === "pools" && <PoolFarming askOllama={askOllama} loading={loading} />}
+        
+        {activeTab === "token" && <TokenSystem />}
+        
+        {activeTab === "tgrr" && <TGRRTokenomics askOllama={askOllama} loading={loading} />}
         
         {activeTab === "leaderboard" && <Leaderboard askOllama={askOllama} loading={loading} />}
         
-        {activeTab === "token" && <TokenSystem />}
+        {activeTab === "upgrade" && <UpgradeSystem />}
         
         {activeTab === "chillverse" && <Chillverse />}
         
@@ -185,18 +186,18 @@ export default function App() {
 
         <div style={{ marginTop: "20px", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "15px" }}>
           {[
-            { label: "TGRR", value: "ACTIVE", color: "#00ff88", icon: "⟳" },
-            { label: "AI", value: model.toUpperCase(), color: "#00d4ff", icon: "◆" },
-            { label: "NETWORK", value: "MAINNET", color: "#00ff88", icon: "⬡" },
-            { label: "VERSION", value: "v2.1", color: "#a855f7", icon: "◆" }
+            { label: "TGRR", value: "ACTIVE", color: "#10b981", icon: "⟳" },
+            { label: "AI", value: model.toUpperCase(), color: "#3b82f6", icon: "◆" },
+            { label: "NETWORK", value: "MAINNET", color: "#10b981", icon: "⬡" },
+            { label: "VERSION", value: "v2.1", color: "#d4a012", icon: "◆" }
           ].map(stat => (
             <div 
               key={stat.label} 
               style={{ 
-                background: "rgba(15, 23, 42, 0.6)", 
+                background: "rgba(30, 58, 95, 0.5)", 
                 padding: "15px 20px", 
                 borderRadius: "12px", 
-                border: "1px solid #1e293b",
+                border: "1px solid #1e3a5f",
                 display: "flex",
                 alignItems: "center",
                 gap: "12px",
