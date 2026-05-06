@@ -20,10 +20,11 @@ import MAXAITrader from "./components/MAXAITrader";
 
 export default function App() {
   const [loading, setLoading] = useState(false);
-  const [prompt, setPrompt] = useState("");
   const [model, setModel] = useState("mistral");
   const [activeTab, setActiveTab] = useState("dashboard");
   const [adminAuth, setAdminAuth] = useState(false);
+  const [showAdminModal, setShowAdminModal] = useState(false);
+  const [adminCode, setAdminCode] = useState("");
 
   const askOllama = async (customPrompt) => {
     setLoading(true);
@@ -33,7 +34,7 @@ export default function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: model,
-          prompt: `You are MADXAI, the MADFX BOSS trading intelligence. ${customPrompt || prompt}`,
+          prompt: `You are MADXAI, the MADFX BOSS trading intelligence. ${customPrompt || ""}`,
           stream: false
         })
       });
@@ -47,10 +48,17 @@ export default function App() {
   };
 
   const handleSecretAccess = () => {
-    const code = prompt("Enter admin access code:");
-    if (code === "MADFXBOSS2026" || code === "DYLANN") {
+    setShowAdminModal(true);
+  };
+
+  const verifyAdminCode = () => {
+    if (adminCode === "MADFXBOSS2026" || adminCode === "DYLANN") {
       setAdminAuth(true);
       setActiveTab("admin");
+      setShowAdminModal(false);
+      setAdminCode("");
+    } else {
+      alert("Invalid code");
     }
   };
 
@@ -214,6 +222,81 @@ export default function App() {
           ))}
         </div>
       </main>
+
+      {showAdminModal && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: "rgba(0, 0, 0, 0.85)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 9999
+        }}>
+          <div style={{
+            background: "#0d1525",
+            padding: "30px",
+            borderRadius: "16px",
+            border: "2px solid #d4a012",
+            maxWidth: "400px",
+            width: "90%"
+          }}>
+            <h3 style={{ color: "#d4a012", marginBottom: "20px", textAlign: "center" }}>ADMIN ACCESS</h3>
+            <input
+              type="password"
+              value={adminCode}
+              onChange={(e) => setAdminCode(e.target.value)}
+              onKeyPress={(e) => e.key === "Enter" && verifyAdminCode()}
+              placeholder="Enter access code..."
+              style={{
+                width: "100%",
+                padding: "14px",
+                background: "#1e3a5f",
+                border: "1px solid #3b82f6",
+                borderRadius: "8px",
+                color: "#fff",
+                fontSize: "16px",
+                marginBottom: "15px"
+              }}
+            />
+            <div style={{ display: "flex", gap: "10px" }}>
+              <button
+                onClick={() => setShowAdminModal(false)}
+                style={{
+                  flex: 1,
+                  background: "transparent",
+                  color: "#64748b",
+                  border: "1px solid #64748b",
+                  padding: "12px",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  fontWeight: "600"
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={verifyAdminCode}
+                style={{
+                  flex: 1,
+                  background: "#d4a012",
+                  color: "#0a0f1a",
+                  border: "none",
+                  padding: "12px",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  fontWeight: "700"
+                }}
+              >
+                Enter
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
