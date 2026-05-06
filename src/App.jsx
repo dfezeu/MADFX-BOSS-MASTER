@@ -17,6 +17,9 @@ import MarketScanner from "./components/MarketScanner";
 import SportsPrediction from "./components/SportsPrediction";
 import UpgradeSystem from "./components/UpgradeSystem";
 import MAXAITrader from "./components/MAXAITrader";
+import WalletConnector from "./components/WalletConnector";
+import DeFiStaking from "./components/DeFiStaking";
+import TokenLauncher from "./components/TokenLauncher";
 
 export default function App() {
   const [loading, setLoading] = useState(false);
@@ -71,6 +74,9 @@ export default function App() {
     { id: "agents", label: "AI Agents" },
     { id: "maxai", label: "MAXAI" },
     { id: "pools", label: "LP Farms" },
+    { id: "wallet", label: "Wallet" },
+    { id: "defi", label: "DeFi" },
+    { id: "launch", label: "Token" },
     { id: "token", label: "NXUS" },
     { id: "tgrr", label: "TGRR" },
     { id: "leaderboard", label: "Copy" },
@@ -180,6 +186,12 @@ export default function App() {
         
         {activeTab === "upgrade" && <UpgradeSystem />}
         
+        {activeTab === "wallet" && <WalletConnector />}
+        
+        {activeTab === "defi" && <DeFiStaking />}
+        
+        {activeTab === "launch" && <TokenLauncher />}
+        
         {activeTab === "chillverse" && <Chillverse />}
         
         {activeTab === "signals" && (
@@ -197,7 +209,7 @@ export default function App() {
             { label: "TGRR", value: "ACTIVE", color: "#10b981", icon: "⟳" },
             { label: "AI", value: model.toUpperCase(), color: "#3b82f6", icon: "◆" },
             { label: "NETWORK", value: "MAINNET", color: "#10b981", icon: "⬡" },
-            { label: "VERSION", value: "v2.1", color: "#d4a012", icon: "◆" }
+            { label: "VERSION", value: "v2.3", color: "#d4a012", icon: "◆" }
           ].map(stat => (
             <div 
               key={stat.label} 
