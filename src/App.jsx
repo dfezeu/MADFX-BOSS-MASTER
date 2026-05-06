@@ -26,6 +26,7 @@ import Vendors from "./components/Vendors";
 import MonetizationHub from "./components/MonetizationHub";
 import SalesDashboard from "./components/SalesDashboard";
 import SalesEngine from "./components/SalesEngine";
+import LeadGenHub from "./components/LeadGenHub";
 
 export default function App() {
   const [loading, setLoading] = useState(false);
@@ -124,6 +125,7 @@ export default function App() {
     { id: "revenue", label: "Revenue" },
     { id: "sales", label: "SALES" },
     { id: "checkout", label: "Buy" },
+    { id: "leads", label: "Leads" },
     { id: "launch", label: "Token" },
     { id: "token", label: "NXUS" },
     { id: "tgrr", label: "TGRR" },
@@ -267,6 +269,8 @@ export default function App() {
         
         {activeTab === "checkout" && <SalesEngine />}
         
+        {activeTab === "leads" && <LeadGenHub />}
+        
         {activeTab === "launch" && <TokenLauncher />}
         
         {activeTab === "chillverse" && <Chillverse />}
@@ -286,7 +290,7 @@ export default function App() {
             { label: "TGRR", value: "ACTIVE", color: "#10b981", icon: "⟳" },
             { label: "AI", value: model.toUpperCase(), color: "#3b82f6", icon: "◆" },
             { label: "NETWORK", value: "MAINNET", color: "#10b981", icon: "⬡" },
-            { label: "VERSION", value: "v2.7 SALES", color: "#d4a012", icon: "◆" }
+            { label: "VERSION", value: "v2.8 SALES", color: "#d4a012", icon: "◆" }
           ].map(stat => (
             <div 
               key={stat.label} 
