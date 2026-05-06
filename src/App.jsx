@@ -25,6 +25,7 @@ import RealDeFi from "./components/RealDeFi";
 import Vendors from "./components/Vendors";
 import MonetizationHub from "./components/MonetizationHub";
 import SalesDashboard from "./components/SalesDashboard";
+import SalesEngine from "./components/SalesEngine";
 
 export default function App() {
   const [loading, setLoading] = useState(false);
@@ -122,6 +123,7 @@ export default function App() {
     { id: "vendors", label: "Store" },
     { id: "revenue", label: "Revenue" },
     { id: "sales", label: "SALES" },
+    { id: "checkout", label: "Buy" },
     { id: "launch", label: "Token" },
     { id: "token", label: "NXUS" },
     { id: "tgrr", label: "TGRR" },
@@ -263,6 +265,8 @@ export default function App() {
         
         {activeTab === "sales" && <SalesDashboard />}
         
+        {activeTab === "checkout" && <SalesEngine />}
+        
         {activeTab === "launch" && <TokenLauncher />}
         
         {activeTab === "chillverse" && <Chillverse />}
@@ -282,7 +286,7 @@ export default function App() {
             { label: "TGRR", value: "ACTIVE", color: "#10b981", icon: "⟳" },
             { label: "AI", value: model.toUpperCase(), color: "#3b82f6", icon: "◆" },
             { label: "NETWORK", value: "MAINNET", color: "#10b981", icon: "⬡" },
-            { label: "VERSION", value: "v2.6 REVENUE", color: "#d4a012", icon: "◆" }
+            { label: "VERSION", value: "v2.7 SALES", color: "#d4a012", icon: "◆" }
           ].map(stat => (
             <div 
               key={stat.label} 
