@@ -20,6 +20,10 @@ import MAXAITrader from "./components/MAXAITrader";
 import WalletConnector from "./components/WalletConnector";
 import DeFiStaking from "./components/DeFiStaking";
 import TokenLauncher from "./components/TokenLauncher";
+import Web3Wallet from "./components/Web3Wallet";
+import RealDeFi from "./components/RealDeFi";
+import Vendors from "./components/Vendors";
+import MonetizationHub from "./components/MonetizationHub";
 
 export default function App() {
   const [loading, setLoading] = useState(false);
@@ -28,6 +32,15 @@ export default function App() {
   const [adminAuth, setAdminAuth] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [adminCode, setAdminCode] = useState("");
+  const [aiProvider, setAiProvider] = useState("ollama");
+  const [openaiKey, setOpenaiKey] = useState("");
+  const [ollamaStatus, setOllamaStatus] = useState("checking");
+
+  useEffect(() => {
+    fetch("http://localhost:11434/api/tags", { method: "GET" })
+      .then(() => setOllamaStatus("online"))
+      .catch(() => setOllamaStatus("offline"));
+  }, []);
 
   const askOllama = async (customPrompt) => {
     setLoading(true);
@@ -48,6 +61,33 @@ export default function App() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const askAI = async (prompt) => {
+    if (aiProvider === "openai" && openaiKey) {
+      setLoading(true);
+      try {
+        const res = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${openaiKey}`
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [{ role: "user", content: prompt }],
+            max_tokens: 500
+          })
+        });
+        const data = await res.json();
+        return data.choices?.[0]?.message?.content || "AI error";
+      } catch (err) {
+        return "OpenAI error: " + err.message;
+      } finally {
+        setLoading(false);
+      }
+    }
+    return askOllama(prompt);
   };
 
   const handleSecretAccess = () => {
@@ -75,7 +115,11 @@ export default function App() {
     { id: "maxai", label: "MAXAI" },
     { id: "pools", label: "LP Farms" },
     { id: "wallet", label: "Wallet" },
+    { id: "web3", label: "Web3" },
     { id: "defi", label: "DeFi" },
+    { id: "rdefi", label: "Real DeFi" },
+    { id: "vendors", label: "Store" },
+    { id: "revenue", label: "Revenue" },
     { id: "launch", label: "Token" },
     { id: "token", label: "NXUS" },
     { id: "tgrr", label: "TGRR" },
@@ -130,9 +174,9 @@ export default function App() {
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#10b981" }}>
-            <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#10b981" }}></div>
-            <span style={{ fontSize: "11px", fontWeight: "500" }}>LIVE</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", color: ollamaStatus === "online" ? "#10b981" : ollamaStatus === "checking" ? "#f59e0b" : "#ef4444" }}>
+            <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: ollamaStatus === "online" ? "#10b981" : ollamaStatus === "checking" ? "#f59e0b" : "#ef4444" }}></div>
+            <span style={{ fontSize: "11px", fontWeight: "500" }}>{ollamaStatus === "online" ? "OLLAMA" : ollamaStatus === "checking" ? "CHECKING..." : "OFFLINE"}</span>
           </div>
           <select
             value={model}
@@ -145,6 +189,23 @@ export default function App() {
             <option value="codellama">CodeLlama</option>
             <option value="tinyllama">TinyLlama</option>
           </select>
+          <select
+            value={aiProvider}
+            onChange={(e) => setAiProvider(e.target.value)}
+            style={{ background: "#0d1525", color: aiProvider === "openai" ? "#10b981" : "#64748b", border: "1px solid #1e3a5f", padding: "6px 10px", borderRadius: "6px", fontSize: "11px" }}
+          >
+            <option value="ollama">Ollama</option>
+            <option value="openai">OpenAI</option>
+          </select>
+          {aiProvider === "openai" && (
+            <input
+              type="password"
+              value={openaiKey}
+              onChange={(e) => setOpenaiKey(e.target.value)}
+              placeholder="sk-..."
+              style={{ background: "#0d1525", color: "#fff", border: "1px solid #1e3a5f", padding: "6px 10px", borderRadius: "6px", fontSize: "11px", width: "120px" }}
+            />
+          )}
           <div style={{ background: "linear-gradient(135deg, #d4a012, #b8860b)", padding: "6px 12px", borderRadius: "6px", cursor: "pointer" }} onClick={handleSecretAccess}>
             <span style={{ color: "#0a0f1a", fontSize: "12px", fontWeight: "700" }}>12,450 AURA</span>
           </div>
@@ -188,7 +249,15 @@ export default function App() {
         
         {activeTab === "wallet" && <WalletConnector />}
         
+        {activeTab === "web3" && <Web3Wallet />}
+        
         {activeTab === "defi" && <DeFiStaking />}
+        
+        {activeTab === "rdefi" && <RealDeFi />}
+        
+        {activeTab === "vendors" && <Vendors />}
+        
+        {activeTab === "revenue" && <MonetizationHub />}
         
         {activeTab === "launch" && <TokenLauncher />}
         
@@ -209,7 +278,7 @@ export default function App() {
             { label: "TGRR", value: "ACTIVE", color: "#10b981", icon: "⟳" },
             { label: "AI", value: model.toUpperCase(), color: "#3b82f6", icon: "◆" },
             { label: "NETWORK", value: "MAINNET", color: "#10b981", icon: "⬡" },
-            { label: "VERSION", value: "v2.3", color: "#d4a012", icon: "◆" }
+            { label: "VERSION", value: "v2.6 REVENUE", color: "#d4a012", icon: "◆" }
           ].map(stat => (
             <div 
               key={stat.label} 
