@@ -24,6 +24,7 @@ import Web3Wallet from "./components/Web3Wallet";
 import RealDeFi from "./components/RealDeFi";
 import Vendors from "./components/Vendors";
 import MonetizationHub from "./components/MonetizationHub";
+import SalesDashboard from "./components/SalesDashboard";
 
 export default function App() {
   const [loading, setLoading] = useState(false);
@@ -120,6 +121,7 @@ export default function App() {
     { id: "rdefi", label: "Real DeFi" },
     { id: "vendors", label: "Store" },
     { id: "revenue", label: "Revenue" },
+    { id: "sales", label: "SALES" },
     { id: "launch", label: "Token" },
     { id: "token", label: "NXUS" },
     { id: "tgrr", label: "TGRR" },
@@ -258,6 +260,8 @@ export default function App() {
         {activeTab === "vendors" && <Vendors />}
         
         {activeTab === "revenue" && <MonetizationHub />}
+        
+        {activeTab === "sales" && <SalesDashboard />}
         
         {activeTab === "launch" && <TokenLauncher />}
         
