@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { ethers } from "ethers";
 
 export default function WalletConnector() {
   const [connectedWallet, setConnectedWallet] = useState(null);
@@ -6,44 +7,95 @@ export default function WalletConnector() {
   const [balances, setBalances] = useState([]);
   const [selectedChain, setSelectedChain] = useState("all");
   const [showImport, setShowImport] = useState(false);
+  const [connecting, setConnecting] = useState(false);
 
   const chains = [
-    { id: "solana", name: "Solana", symbol: "SOL", color: "#9945FF", rpc: "https://api.mainnet-beta.solana.com" },
-    { id: "ethereum", name: "Ethereum", symbol: "ETH", color: "#627EEA" },
-    { id: "bitcoin", name: "Bitcoin", symbol: "BTC", color: "#F7931A" },
-    { id: "xrp", name: "XRP", symbol: "XRP", color: "#23292F" },
-    { id: "polygon", name: "Polygon", symbol: "MATIC", color: "#8247E5" },
-    { id: "hyperliquid", name: "Hyperliquid", symbol: "HYPER", color: "#00D4FF" }
+    { id: "ethereum", name: "Ethereum", symbol: "ETH", color: "#627EEA", rpc: "https://eth.llamarpc.com" },
+    { id: "polygon", name: "Polygon", symbol: "MATIC", color: "#8247E5", rpc: "https://polygon-rpc.com" },
+    { id: "arbitrum", name: "Arbitrum", symbol: "ETH", color: "#28A0F0", rpc: "https://arb1.arbitrum.io/rpc" },
+    { id: "bsc", name: "BNB Chain", symbol: "BNB", color: "#F3BA2F", rpc: "https://bsc-dataseed.binance.org" },
+    { id: "base", name: "Base", symbol: "ETH", color: "#0052FF", rpc: "https://mainnet.base.org" }
   ];
 
   const walletTypes = [
-    { id: "metamask", name: "MetaMask", icon: "🦊", chains: ["ethereum", "polygon"] },
-    { id: "phantom", name: "Phantom", icon: "👻", chains: ["solana"] },
-    { id: "coinbase", name: "Coinbase Wallet", icon: "💰", chains: ["ethereum", "polygon", "solana"] },
-    { id: "trust", name: "Trust Wallet", icon: "🔐", chains: ["ethereum", "solana", "polygon"] },
-    { id: "uphold", name: "Uphold", icon: "🛡️", chains: ["bitcoin", "ethereum"] },
-    { id: "manual", name: "Manual Import", icon: "📝", chains: ["all"] }
+    { id: "metamask", name: "MetaMask", icon: "🦊", chains: ["ethereum", "polygon", "arbitrum", "bsc", "base"] },
+    { id: "coinbase", name: "Coinbase Wallet", icon: "💰", chains: ["ethereum", "polygon", "base"] },
+    { id: "walletconnect", name: "WalletConnect", icon: "🔗", chains: ["ethereum", "polygon"] }
   ];
 
-  const mockBalances = [
-    { chain: "solana", symbol: "SOL", balance: 12.45, usdValue: 2450, address: "7xK...23v" },
+  const getNativeBalance = async (address, chainId) => {
+    try {
+      const chain = chains.find(c => c.id === chainId);
+      if (!chain) return null;
+      
+      const provider = new ethers.JsonRpcProvider(chain.rpc);
+      const balance = await provider.getBalance(address);
+      return {
+        chain: chainId,
+        symbol: chain.symbol,
+        balance: parseFloat(ethers.formatEther(balance)),
+        usdValue: 0
+      };
+    } catch (e) {
+      console.error("Error getting balance:", e);
+      return null;
+    }
+  };
+
+  const connectRealWallet = async (walletType) => {
+    setConnecting(true);
+    try {
+      let address = null;
+      
+      if (walletType === "metamask" && window.ethereum) {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const accounts = await provider.send("eth_requestAccounts", []);
+        address = accounts[0];
+        
+        const network = await provider.getNetwork();
+        const chainId = network.chainId;
+        
+        let chainName = "ethereum";
+        if (chainId === 137n) chainName = "polygon";
+        else if (chainId === 42161n) chainName = "arbitrum";
+        else if (chainId === 56n) chainName = "bsc";
+        
+        const balance = await getNativeBalance(address, chainName);
+        
+        setConnectedWallet({
+          type: walletType,
+          address: address,
+          chain: chainName,
+          connected: true
+        });
+        
+        if (balance) {
+          setBalances([balance]);
+        }
+      } else if (walletType === "coinbase" && window.coinbaseWalletExtension) {
+        address = await window.coinbaseWalletExtension.requestAccount();
+        setConnectedWallet({
+          type: walletType,
+          address: address,
+          connected: true
+        });
+      } else {
+        alert("Please install " + walletType + " browser extension");
+      }
+    } catch (e) {
+      console.error("Connection error:", e);
+      alert("Failed to connect: " + e.message);
+    }
+    setConnecting(false);
+  };
+
+  const mockBalances = connectedWallet?.connected ? balances : [
     { chain: "ethereum", symbol: "ETH", balance: 2.34, usdValue: 5850, address: "0x3f...A1c" },
     { chain: "ethereum", symbol: "USDC", balance: 12500, usdValue: 12500, address: "0x3f...A1c" },
-    { chain: "bitcoin", symbol: "BTC", balance: 0.15, usdValue: 9500, address: "bc1q...k2" },
-    { chain: "polygon", symbol: "MATIC", balance: 8500, usdValue: 6800, address: "0x3f...A1c" },
-    { chain: "xrp", symbol: "XRP", balance: 25000, usdValue: 12500, address: "rG...t2" }
+    { chain: "polygon", symbol: "MATIC", balance: 8500, usdValue: 6800, address: "0x3f...A1c" }
   ];
 
-  const totalPortfolio = mockBalances.reduce((sum, b) => sum + b.usdValue, 0);
-
-  const connectWallet = (walletType) => {
-    setConnectedWallet({
-      type: walletType,
-      address: walletType === "metamask" ? "0x3fA...A1c" : walletType === "phantom" ? "7xK...23v" : "manual",
-      connected: true
-    });
-    setShowConnect(false);
-  };
+  const totalPortfolio = mockBalances?.reduce((sum, b) => sum + (b.usdValue || 0), 0) || 0;
 
   const disconnect = () => {
     setConnectedWallet(null);
@@ -71,7 +123,7 @@ export default function WalletConnector() {
                   if (wallet.id === "manual") {
                     setShowImport(true);
                   } else {
-                    connectWallet(wallet.id);
+                    connectRealWallet(wallet.id);
                   }
                 }}
                 style={{
