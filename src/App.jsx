@@ -144,11 +144,12 @@ export default function App() {
   }
 
   return (
-    <div style={{ background: "#0a0f1a", minHeight: "100vh", fontFamily: "'Space Grotesk', sans-serif" }}>
+    <div style={{ background: "#050510", minHeight: "100vh", fontFamily: "'Space Grotesk', sans-serif" }}>
       <nav style={{ 
-        background: "rgba(13, 21, 37, 0.95)", 
+        background: "rgba(10, 15, 26, 0.98)", 
         backdropFilter: "blur(20px)",
-        borderBottom: "1px solid #1e3a5f",
+        borderBottom: "1px solid #00aaff",
+        boxShadow: "0 0 20px rgba(0, 170, 255, 0.3)",
         padding: "0 20px",
         display: "flex",
         alignItems: "center",
@@ -158,24 +159,42 @@ export default function App() {
         zIndex: 100
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "20px", padding: "15px 0" }}>
-          <h1 style={{ color: "#d4a012", fontSize: "20px", fontWeight: "700", letterSpacing: "0.5px" }}>
+          <h1 style={{ color: "#00ff88", fontSize: "22px", fontWeight: "700", letterSpacing: "1px", textShadow: "0 0 10px #00ff88" }}>
             MADFX BOSS
           </h1>
-          <span style={{ color: "#1e3a5f", fontSize: "20px" }}>|</span>
-          <div style={{ display: "flex", gap: "4px" }}>
+          <span style={{ color: "#00aaff", fontSize: "20px" }}>|</span>
+          <div style={{ display: "flex", gap: "6px" }}>
             {tabs.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 style={{
-                  background: activeTab === tab.id ? "rgba(59, 130, 246, 0.15)" : "transparent",
-                  color: activeTab === tab.id ? "#3b82f6" : "#64748b",
-                  border: "none",
-                  padding: "8px 14px",
-                  borderRadius: "6px",
+                  background: activeTab === tab.id ? "rgba(0, 255, 136, 0.15)" : "transparent",
+                  color: activeTab === tab.id ? "#00ff88" : "#ffffff",
+                  border: "1px solid " + (activeTab === tab.id ? "#00ff88" : "transparent"),
+                  padding: "10px 16px",
+                  borderRadius: "8px",
                   cursor: "pointer",
                   fontSize: "12px",
-                  fontWeight: activeTab === tab.id ? "600" : "400"
+                  fontWeight: activeTab === tab.id ? "600" : "400",
+                  transition: "all 0.3s ease",
+                  boxShadow: activeTab === tab.id ? "0 0 15px rgba(0, 255, 136, 0.5)" : "none"
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = "rgba(0, 170, 255, 0.2)";
+                  e.target.style.color = "#00aaff";
+                  e.target.style.border = "1px solid #00aaff";
+                  e.target.style.boxShadow = "0 0 15px rgba(0, 170, 255, 0.5)";
+                  e.target.style.transform = "scale(1.05)";
+                }}
+                onMouseLeave={(e) => {
+                  if (activeTab !== tab.id) {
+                    e.target.style.background = "transparent";
+                    e.target.style.color = "#ffffff";
+                    e.target.style.border = "1px solid transparent";
+                    e.target.style.boxShadow = "none";
+                    e.target.style.transform = "scale(1)";
+                  }
                 }}
               >
                 {tab.label}
@@ -184,9 +203,9 @@ export default function App() {
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", color: ollamaStatus === "online" ? "#10b981" : ollamaStatus === "checking" ? "#f59e0b" : "#ef4444" }}>
-            <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: ollamaStatus === "online" ? "#10b981" : ollamaStatus === "checking" ? "#f59e0b" : "#ef4444" }}></div>
-            <span style={{ fontSize: "11px", fontWeight: "500" }}>{ollamaStatus === "online" ? "OLLAMA" : ollamaStatus === "checking" ? "CHECKING..." : "OFFLINE"}</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", color: ollamaStatus === "online" ? "#00ff88" : ollamaStatus === "checking" ? "#f59e0b" : "#ef4444" }}>
+            <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: ollamaStatus === "online" ? "#00ff88" : ollamaStatus === "checking" ? "#f59e0b" : "#ef4444", boxShadow: ollamaStatus === "online" ? "0 0 10px #00ff88" : "none" }}></div>
+            <span style={{ fontSize: "11px", fontWeight: "500", color: "#00aaff" }}>{ollamaStatus === "online" ? "OLLAMA" : ollamaStatus === "checking" ? "CHECKING..." : "OFFLINE"}</span>
           </div>
           <select
             value={model}
@@ -298,7 +317,7 @@ export default function App() {
             { label: "TGRR", value: "ACTIVE", color: "#10b981", icon: "⟳" },
             { label: "AI", value: model.toUpperCase(), color: "#3b82f6", icon: "◆" },
             { label: "NETWORK", value: "MAINNET", color: "#10b981", icon: "⬡" },
-            { label: "VERSION", value: "v3.0 LIVE", color: "#d4a012", icon: "◆" }
+            { label: "VERSION", value: "v3.1 SCANNER", color: "#d4a012", icon: "◆" }
           ].map(stat => (
             <div 
               key={stat.label} 
