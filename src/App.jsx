@@ -29,6 +29,7 @@ import SalesEngine from "./components/SalesEngine";
 import LeadGenHub from "./components/LeadGenHub";
 import LiveTradingHub from "./components/LiveTradingHub";
 import TradeScanner from "./components/TradeScanner";
+import LiveChartStudio from "./components/LiveChartStudio";
 
 export default function App() {
   const [loading, setLoading] = useState(false);
@@ -130,6 +131,7 @@ export default function App() {
     { id: "leads", label: "Leads" },
     { id: "trade", label: "Trade" },
     { id: "scanner", label: "Scanner" },
+    { id: "chart", label: "Chart" },
     { id: "launch", label: "Token" },
     { id: "token", label: "NXUS" },
     { id: "tgrr", label: "TGRR" },
@@ -297,6 +299,8 @@ export default function App() {
         {activeTab === "trade" && <LiveTradingHub />}
         
         {activeTab === "scanner" && <TradeScanner />}
+        
+        {activeTab === "chart" && <LiveChartStudio />}
         
         {activeTab === "launch" && <TokenLauncher />}
         
