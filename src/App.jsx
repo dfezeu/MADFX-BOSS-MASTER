@@ -33,6 +33,7 @@ import LiveChartStudio from "./components/LiveChartStudio";
 import MultiMarketHub from "./components/MultiMarketHub";
 import OptionsScanner from "./components/OptionsScanner";
 import BackOfficeCEO from "./components/BackOfficeCEO";
+import Make100 from "./components/Make100";
 
 export default function App() {
   const [loading, setLoading] = useState(false);
@@ -138,6 +139,7 @@ export default function App() {
     { id: "markets", label: "Markets" },
     { id: "options", label: "Options" },
     { id: "backoffice", label: "CEO" },
+    { id: "make100", label: "$100" },
     { id: "launch", label: "Token" },
     { id: "token", label: "NXUS" },
     { id: "tgrr", label: "TGRR" },
@@ -314,6 +316,8 @@ export default function App() {
         
         {activeTab === "backoffice" && <BackOfficeCEO />}
         
+        {activeTab === "make100" && <Make100 />}
+        
         {activeTab === "launch" && <TokenLauncher />}
         
         {activeTab === "chillverse" && <Chillverse />}
@@ -333,7 +337,7 @@ export default function App() {
             { label: "TGRR", value: "ACTIVE", color: "#10b981", icon: "⟳" },
             { label: "AI", value: model.toUpperCase(), color: "#3b82f6", icon: "◆" },
             { label: "NETWORK", value: "MAINNET", color: "#10b981", icon: "⬡" },
-            { label: "VERSION", value: "v3.2 CHART", color: "#00ff88", icon: "◆" }
+            { label: "VERSION", value: "v3.3 ENTERPRISE", color: "#00ff88", icon: "◆" }
           ].map(stat => (
             <div 
               key={stat.label} 
