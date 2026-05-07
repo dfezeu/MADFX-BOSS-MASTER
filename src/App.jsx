@@ -27,6 +27,7 @@ import MonetizationHub from "./components/MonetizationHub";
 import SalesDashboard from "./components/SalesDashboard";
 import SalesEngine from "./components/SalesEngine";
 import LeadGenHub from "./components/LeadGenHub";
+import LiveTradingHub from "./components/LiveTradingHub";
 
 export default function App() {
   const [loading, setLoading] = useState(false);
@@ -126,6 +127,7 @@ export default function App() {
     { id: "sales", label: "SALES" },
     { id: "checkout", label: "Buy" },
     { id: "leads", label: "Leads" },
+    { id: "trade", label: "Trade" },
     { id: "launch", label: "Token" },
     { id: "token", label: "NXUS" },
     { id: "tgrr", label: "TGRR" },
@@ -271,6 +273,8 @@ export default function App() {
         
         {activeTab === "leads" && <LeadGenHub />}
         
+        {activeTab === "trade" && <LiveTradingHub />}
+        
         {activeTab === "launch" && <TokenLauncher />}
         
         {activeTab === "chillverse" && <Chillverse />}
@@ -290,7 +294,7 @@ export default function App() {
             { label: "TGRR", value: "ACTIVE", color: "#10b981", icon: "⟳" },
             { label: "AI", value: model.toUpperCase(), color: "#3b82f6", icon: "◆" },
             { label: "NETWORK", value: "MAINNET", color: "#10b981", icon: "⬡" },
-            { label: "VERSION", value: "v2.8 SALES", color: "#d4a012", icon: "◆" }
+            { label: "VERSION", value: "v2.9 LEADS", color: "#d4a012", icon: "◆" }
           ].map(stat => (
             <div 
               key={stat.label} 
