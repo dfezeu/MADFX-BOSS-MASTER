@@ -30,6 +30,9 @@ import LeadGenHub from "./components/LeadGenHub";
 import LiveTradingHub from "./components/LiveTradingHub";
 import TradeScanner from "./components/TradeScanner";
 import LiveChartStudio from "./components/LiveChartStudio";
+import MultiMarketHub from "./components/MultiMarketHub";
+import OptionsScanner from "./components/OptionsScanner";
+import BackOfficeCEO from "./components/BackOfficeCEO";
 
 export default function App() {
   const [loading, setLoading] = useState(false);
@@ -132,6 +135,9 @@ export default function App() {
     { id: "trade", label: "Trade" },
     { id: "scanner", label: "Scanner" },
     { id: "chart", label: "Chart" },
+    { id: "markets", label: "Markets" },
+    { id: "options", label: "Options" },
+    { id: "backoffice", label: "CEO" },
     { id: "launch", label: "Token" },
     { id: "token", label: "NXUS" },
     { id: "tgrr", label: "TGRR" },
@@ -302,6 +308,12 @@ export default function App() {
         
         {activeTab === "chart" && <LiveChartStudio />}
         
+        {activeTab === "markets" && <MultiMarketHub />}
+        
+        {activeTab === "options" && <OptionsScanner />}
+        
+        {activeTab === "backoffice" && <BackOfficeCEO />}
+        
         {activeTab === "launch" && <TokenLauncher />}
         
         {activeTab === "chillverse" && <Chillverse />}
@@ -321,7 +333,7 @@ export default function App() {
             { label: "TGRR", value: "ACTIVE", color: "#10b981", icon: "⟳" },
             { label: "AI", value: model.toUpperCase(), color: "#3b82f6", icon: "◆" },
             { label: "NETWORK", value: "MAINNET", color: "#10b981", icon: "⬡" },
-            { label: "VERSION", value: "v3.1 SCANNER", color: "#d4a012", icon: "◆" }
+            { label: "VERSION", value: "v3.2 CHART", color: "#00ff88", icon: "◆" }
           ].map(stat => (
             <div 
               key={stat.label} 
