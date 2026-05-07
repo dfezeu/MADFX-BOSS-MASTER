@@ -115,38 +115,63 @@ export default function App() {
     }
   };
 
-  const tabs = [
-    { id: "dashboard", label: "Dashboard" },
-    { id: "markets", label: "Markets" },
-    { id: "scanner", label: "Scanner" },
-    { id: "sports", label: "Sports" },
-    { id: "trading", label: "Trading" },
-    { id: "agents", label: "AI Agents" },
-    { id: "maxai", label: "MAXAI" },
-    { id: "pools", label: "LP Farms" },
-    { id: "wallet", label: "Wallet" },
-    { id: "web3", label: "Web3" },
-    { id: "defi", label: "DeFi" },
-    { id: "rdefi", label: "Real DeFi" },
-    { id: "vendors", label: "Store" },
-    { id: "revenue", label: "Revenue" },
-    { id: "sales", label: "SALES" },
-    { id: "checkout", label: "Buy" },
-    { id: "leads", label: "Leads" },
-    { id: "trade", label: "Trade" },
-    { id: "scanner", label: "Scanner" },
-    { id: "chart", label: "Chart" },
-    { id: "markets", label: "Markets" },
-    { id: "options", label: "Options" },
-    { id: "backoffice", label: "CEO" },
-    { id: "make100", label: "$100" },
-    { id: "launch", label: "Token" },
-    { id: "token", label: "NXUS" },
-    { id: "tgrr", label: "TGRR" },
-    { id: "leaderboard", label: "Copy" },
-    { id: "upgrade", label: "Pro" },
-    { id: "chillverse", label: "Casino" },
-    { id: "signals", label: "Signals" }
+  const tabs = [];
+  
+  const NAV_CATEGORIES = [
+    { 
+      id: "home", 
+      label: "🏠 HOME", 
+      items: [
+        { id: "dashboard", label: "Dashboard" }
+      ]
+    },
+    { 
+      id: "trading", 
+      label: "📈 TRADING", 
+      items: [
+        { id: "markets", label: "Markets" },
+        { id: "chart", label: "Chart" },
+        { id: "trade", label: "Trade" },
+        { id: "options", label: "Options" }
+      ]
+    },
+    { 
+      id: "tools", 
+      label: "🔧 TOOLS", 
+      items: [
+        { id: "scanner", label: "Scanner" },
+        { id: "agents", label: "AI Agents" },
+        { id: "maxai", label: "MAXAI" }
+      ]
+    },
+    { 
+      id: "finance", 
+      label: "💰 FINANCE", 
+      items: [
+        { id: "wallet", label: "Wallet" },
+        { id: "revenue", label: "Revenue" },
+        { id: "pools", label: "LP Farms" }
+      ]
+    },
+    { 
+      id: "business", 
+      label: "💼 BUSINESS", 
+      items: [
+        { id: "sales", label: "Sales" },
+        { id: "leads", label: "Leads" },
+        { id: "backoffice", label: "CEO" }
+      ]
+    },
+    { 
+      id: "products", 
+      label: "🎁 PRODUCTS", 
+      items: [
+        { id: "vendors", label: "Store" },
+        { id: "checkout", label: "Buy" },
+        { id: "make100", label: "$100" },
+        { id: "launch", label: "Token" }
+      ]
+    }
   ];
 
   if (adminAuth && activeTab === "admin") {
@@ -168,49 +193,94 @@ export default function App() {
         top: 0,
         zIndex: 100
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "20px", padding: "15px 0" }}>
-          <h1 style={{ color: "#00ff88", fontSize: "22px", fontWeight: "700", letterSpacing: "1px", textShadow: "0 0 10px #00ff88" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "20px", padding: "15px 0", position: "relative" }}>
+          <h1 style={{ color: "#00ff88", fontSize: "22px", fontWeight: "700", letterSpacing: "1px", textShadow: "0 0 10px #00ff88", cursor: "pointer" }}
+            onClick={() => setActiveTab("dashboard")}
+          >
             MADFX BOSS
           </h1>
-          <span style={{ color: "#00aaff", fontSize: "20px" }}>|</span>
-          <div style={{ display: "flex", gap: "6px" }}>
-            {tabs.map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                style={{
-                  background: activeTab === tab.id ? "rgba(0, 255, 136, 0.15)" : "transparent",
-                  color: activeTab === tab.id ? "#00ff88" : "#ffffff",
-                  border: "1px solid " + (activeTab === tab.id ? "#00ff88" : "transparent"),
-                  padding: "10px 16px",
-                  borderRadius: "8px",
-                  cursor: "pointer",
-                  fontSize: "12px",
-                  fontWeight: activeTab === tab.id ? "600" : "400",
-                  transition: "all 0.3s ease",
-                  boxShadow: activeTab === tab.id ? "0 0 15px rgba(0, 255, 136, 0.5)" : "none"
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.background = "rgba(0, 170, 255, 0.2)";
-                  e.target.style.color = "#00aaff";
-                  e.target.style.border = "1px solid #00aaff";
-                  e.target.style.boxShadow = "0 0 15px rgba(0, 170, 255, 0.5)";
-                  e.target.style.transform = "scale(1.05)";
-                }}
-                onMouseLeave={(e) => {
-                  if (activeTab !== tab.id) {
-                    e.target.style.background = "transparent";
-                    e.target.style.color = "#ffffff";
-                    e.target.style.border = "1px solid transparent";
-                    e.target.style.boxShadow = "none";
-                    e.target.style.transform = "scale(1)";
-                  }
-                }}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+          
+          {NAV_CATEGORIES.map(category => {
+            const hasActive = category.items.some(item => item.id === activeTab);
+            return (
+              <div key={category.id} style={{ position: "relative" }}>
+                <button
+                  onClick={() => {
+                    if (!hasActive) setActiveTab(category.items[0].id);
+                  }}
+                  onMouseEnter={(e) => {
+                    const dropdown = e.currentTarget.parentElement.querySelector('.dropdown');
+                    if (dropdown) dropdown.style.display = "block";
+                  }}
+                  onMouseLeave={(e) => {
+                    const dropdown = e.currentTarget.parentElement.querySelector('.dropdown');
+                    if (dropdown) dropdown.style.display = "none";
+                  }}
+                  style={{
+                    background: hasActive ? "rgba(0, 255, 136, 0.15)" : "transparent",
+                    color: hasActive ? "#00ff88" : "#ffffff",
+                    border: "none",
+                    padding: "10px 15px",
+                    borderRadius: "8px",
+                    cursor: "pointer",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    transition: "all 0.3s ease"
+                  }}
+                >
+                  {category.label}
+                </button>
+                <div 
+                  className="dropdown"
+                  style={{
+                    display: "none",
+                    position: "absolute",
+                    top: "100%",
+                    left: 0,
+                    background: "rgba(10, 15, 26, 0.98)",
+                    border: "1px solid #00aaff",
+                    borderRadius: "8px",
+                    padding: "10px 0",
+                    minWidth: "180px",
+                    boxShadow: "0 0 30px rgba(0, 170, 255, 0.3)",
+                    zIndex: 1000,
+                    marginTop: "5px"
+                  }}
+                >
+                  {category.items.map(item => (
+                    <button
+                      key={item.id}
+                      onClick={() => setActiveTab(item.id)}
+                      style={{
+                        display: "block",
+                        width: "100%",
+                        background: activeTab === item.id ? "rgba(0, 255, 136, 0.2)" : "transparent",
+                        color: activeTab === item.id ? "#00ff88" : "#ffffff",
+                        border: "none",
+                        padding: "10px 20px",
+                        textAlign: "left",
+                        cursor: "pointer",
+                        fontSize: "12px",
+                        transition: "all 0.2s"
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.background = "rgba(0, 170, 255, 0.2)";
+                        e.target.style.paddingLeft = "25px";
+                      }}
+                      onMouseLeave={(e) => {
+                        if (activeTab !== item.id) {
+                          e.target.style.background = "transparent";
+                          e.target.style.paddingLeft = "20px";
+                        }
+                      }}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "8px", color: ollamaStatus === "online" ? "#00ff88" : ollamaStatus === "checking" ? "#f59e0b" : "#ef4444" }}>
