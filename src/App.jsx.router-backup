@@ -1,0 +1,43 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import HomeLanding from './pages/HomeLanding';
+import Dashboard from './pages/Dashboard';
+import Tokenomics from './pages/Tokenomics';
+import SocialMedia from './pages/SocialMedia';
+import Backoffice from './pages/Backoffice';
+import DemoAccount from './pages/DemoAccount';
+import LiveAccount from './pages/LiveAccount';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
+
+// Import the AI service functions from the old App.jsx (we'll create a context or hook later)
+// For now, we'll pass them as props to the Dashboard via context or we'll move the state to Dashboard.
+// Since we are keeping the state in Dashboard, we don't need to pass anything.
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        {/* Landing Page */}
+        <Route path="/" element={<HomeLanding />} />
+        
+        {/* Dashboard (main app) - requires authentication? We'll handle that in Dashboard */}
+        <Route path="/app" element={<Dashboard />} />
+        
+        {/* Other Pages */}
+        <Route path="/tokenomics" element={<Tokenomics />} />
+        <Route path="/social-media" element={<SocialMedia />} />
+        <Route path="/backoffice" element={<Backoffice />} />
+        <Route path="/demo-account" element={<DemoAccount />} />
+        <Route path="/live-account" element={<LiveAccount />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
+        
+        {/* Redirect unknown routes to landing */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;

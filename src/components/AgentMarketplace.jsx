@@ -5,74 +5,112 @@ export default function AgentMarketplace({ askOllama, loading }) {
   const [agentTask, setAgentTask] = useState("");
   const [taskResult, setTaskResult] = useState("");
 
-  const agents = [
-    {
-      id: "harmonic-scanner",
-      name: "Harmonic Scanner Agent",
-      description: "Detects Gartley, Butterfly, Bat, Crab, Shark patterns using AI analysis",
-      capabilities: ["Pattern Detection", "Price Analysis", "Signal Generation"],
-      status: "active",
-      tier: "Pro",
-      performance: "+23.4%"
-    },
-    {
-      id: "martingale-scalper",
-      name: "Martingale Scalper Agent",
-      description: "Adaptive position sizing with prop firm compliance (FTMO, FundedNext, True Forex)",
-      capabilities: ["Auto-Scaling", "Risk Management", "Compliance"],
-      status: "active",
-      tier: "Pro",
-      performance: "+18.7%"
-    },
-    {
-      id: "multi-hedge",
-      name: "Multi-Hedge Agent",
-      description: "Multi-strategy hedging with dynamic risk-managed position management",
-      capabilities: ["Hedging", "Delta Neutral", "Correlation"],
-      status: "active",
-      tier: "Elite",
-      performance: "+31.2%"
-    },
-    {
-      id: "liquidity-pool",
-      name: "Liquidity Pool Agent",
-      description: "DeFi liquidity pool farming with lock-tier incentives and APY optimization",
-      capabilities: ["LP Farming", "APY Tracking", "Auto-Compound"],
-      status: "active",
-      tier: "Elite",
-      performance: "+45.8%"
-    },
-    {
-      id: "arbitrage-hunter",
-      name: "Arbitrage Hunter Agent",
-      description: "Kalshi x Polymarket spread detection with cross-exchange execution",
-      capabilities: ["Spread Detection", "Cross-Exchange", "Auto-Execution"],
-      status: "active",
-      tier: "Pro",
-      performance: "+12.1%"
-    },
-    {
-      id: "prediction-scanner",
-      name: "Prediction Scanner Agent",
-      description: "Real-time market scanner for prediction market arbitrage opportunities",
-      capabilities: ["Market Scan", "Arbitrage", "Event Tracking"],
-      status: "active",
-      tier: "Basic",
-      performance: "+8.5%"
-    }
-  ];
+    const agents = [
+      {
+        id: "harmonic-scanner",
+        name: "Harmonic Scanner Agent",
+        description: "Detects Gartley, Butterfly, Bat, Crab, Shark patterns using AI analysis",
+        capabilities: ["Pattern Detection", "Price Analysis", "Signal Generation"],
+        status: "active",
+        tier: "Pro",
+        performance: "+23.4%"
+      },
+      {
+        id: "martingale-scalper",
+        name: "Martingale Scalper Agent",
+        description: "Adaptive position sizing with prop firm compliance (FTMO, FundedNext, True Forex)",
+        capabilities: ["Auto-Scaling", "Risk Management", "Compliance"],
+        status: "active",
+        tier: "Pro",
+        performance: "+18.7%"
+      },
+      {
+        id: "multi-hedge",
+        name: "Multi-Hedge Agent",
+        description: "Multi-strategy hedging with dynamic risk-managed position management",
+        capabilities: ["Hedging", "Delta Neutral", "Correlation"],
+        status: "active",
+        tier: "Elite",
+        performance: "+31.2%"
+      },
+      {
+        id: "liquidity-pool",
+        name: "Liquidity Pool Agent",
+        description: "DeFi liquidity pool farming with lock-tier incentives and APY optimization",
+        capabilities: ["LP Farming", "APY Tracking", "Auto-Compound"],
+        status: "active",
+        tier: "Elite",
+        performance: "+45.8%"
+      },
+      {
+        id: "arbitrage-hunter",
+        name: "Arbitrage Hunter Agent",
+        description: "Kalshi x Polymarket spread detection with cross-exchange execution",
+        capabilities: ["Spread Detection", "Cross-Exchange", "Auto-Execution"],
+        status: "active",
+        tier: "Pro",
+        performance: "+12.1%"
+      },
+      {
+        id: "prediction-scanner",
+        name: "Prediction Scanner Agent",
+        description: "Real-time market scanner for prediction market arbitrage opportunities",
+        capabilities: ["Market Scan", "Arbitrage", "Event Tracking"],
+        status: "active",
+        tier: "Basic",
+        performance: "+8.5%"
+      },
+      {
+        id: "org-builder",
+        name: "Organization Builder Agent",
+        description: "Builds organizational structure, creates departments, hires virtual staff, establishes workflows",
+        capabilities: ["Org Design", "HR Automation", "Process Creation", "Team Management"],
+        status: "active",
+        tier: "Elite",
+        performance: "+42.3%"
+      },
+      {
+        id: "customer-acquirer",
+        name: "Customer Acquisition Agent",
+        description: "Generates leads, runs marketing campaigns, converts prospects, manages customer relationships",
+        capabilities: ["Lead Gen", "Marketing Automation", "Sales Funnel", "CRM Management"],
+        status: "active",
+        tier: "Elite",
+        performance: "+38.7%"
+      },
+      {
+        id: "trade-generator",
+        name: "Trade Generator Agent",
+        description: "Executes trades based on signals, manages portfolio, optimizes entry/exit points",
+        capabilities: ["Trade Execution", "Portfolio Mgmt", "Risk Control", "Performance Tracking"],
+        status: "active",
+        tier: "Pro",
+        performance: "+29.5%"
+      }
+    ];
 
-  const handleDeployAgent = async () => {
-    if (!selectedAgent || !agentTask) return;
-    
-    setTaskResult("Deploying agent...");
-    try {
-      const result = await askOllama(`Deploy ${selectedAgent.name} to: ${agentTask}. Provide execution details and expected outcome.`);
-      setTaskResult(result);
-    } catch (err) {
-      setTaskResult("Agent deployment failed. Check Ollama connection.");
-    }
-  };
+    const handleDeployAgent = async () => {
+      if (!selectedAgent || !agentTask) return;
+      
+      setTaskResult("Deploying agent...");
+      try {
+        // Enhanced prompts for specialized agents
+        let enhancedPrompt = agentTask;
+        
+        if (selectedAgent.id === "org-builder") {
+          enhancedPrompt = `Build an organizational structure for MADFX BOSS including departments (Trading, AI Development, Marketing, Customer Support, Operations), define roles and responsibilities, create hiring plan for virtual staff, establish reporting structure and workflows. ${agentTask}`;
+        } else if (selectedAgent.id === "customer-acquirer") {
+          enhancedPrompt = `Develop customer acquisition strategy for MADFX BOSS including lead generation tactics, marketing campaigns across social media and crypto communities, conversion optimization, and customer retention programs. ${agentTask}`;
+        } else if (selectedAgent.id === "trade-generator") {
+          enhancedPrompt = `Create automated trade execution system based on AI signals, including portfolio management rules, risk control parameters, entry/exit optimization, and performance tracking mechanisms. ${agentTask}`;
+        }
+        
+        const result = await askOllama(`Deploy ${selectedAgent.name} to: ${enhancedPrompt}. Provide execution details, timeline, and expected outcome.`);
+        setTaskResult(result);
+      } catch (err) {
+        setTaskResult("Agent deployment failed. Check Ollama connection.");
+      }
+    };
 
   const handleActivate = async (agent) => {
     setSelectedAgent(agent);
