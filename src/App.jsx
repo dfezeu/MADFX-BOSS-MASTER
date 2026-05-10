@@ -33,6 +33,7 @@ import LiveChartStudio from "./components/LiveChartStudio";
 import MultiMarketHub from "./components/MultiMarketHub";
 import OptionsScanner from "./components/OptionsScanner";
 import BackOfficeCEO from "./components/BackOfficeCEO";
+import MadfxHQControlCenter from "./components/MadfxHQControlCenter";
 import Make100 from "./components/Make100";
 import ViralBoss from "./components/ViralBoss";
 import ViralBossLinks from "./components/ViralBossLinks";
@@ -185,6 +186,7 @@ export default function App() {
       id: "business", 
       label: "BUSINESS", 
       items: [
+        { id: "madfx-hq", label: "MADFX HQ" },
         { id: "sales", label: "Sales" },
         { id: "leads", label: "Leads" },
         { id: "backoffice", label: "CEO" }
@@ -780,6 +782,7 @@ export default function App() {
         {activeTab === "chart" && <LiveChartStudio />}
         {activeTab === "markets" && <MultiMarketHub />}
         {activeTab === "options" && <OptionsScanner />}
+        {activeTab === "madfx-hq" && <MadfxHQControlCenter />}
         {activeTab === "backoffice" && <BackOfficeCEO />}
         {activeTab === "make100" && <Make100 />}
         {activeTab === "launch" && <TokenLauncher />}
