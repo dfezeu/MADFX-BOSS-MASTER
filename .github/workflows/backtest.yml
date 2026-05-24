@@ -1,0 +1,50 @@
+name: Backtest Runner
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch:      # Allow manual triggering
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run backtests
+      run: npm run backtest
+      
+    - name: Upload results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: backtest-results
+        path: backtest/results/
+        
+    - name: Post results to Slack/Webhook (if configured)
+      if: always()
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      run: |
+        # Only post if webhook URLs are configured
+        if [ -n "$SLACK_WEBHOOK_URL" ]; then
+          curl -X POST -H 'Content-type: application/json' \
+            --data '{"text":"MADFX BOSS Backtest Results: Check GitHub Actions for detailed results."}' \
+            $SLACK_WEBHOOK_URL
+        fi
+        
+        if [ -n "$DISCORD_WEBHOOK_URL" ]; then
+          curl -X POST -H 'Content-type: application/json' \
+            --data '{"content":"MADFX BOSS Backtest Results: Check GitHub Actions for detailed results."}' \
+            $DISCORD_WEBHOOK_URL
+        fi
