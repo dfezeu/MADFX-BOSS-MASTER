@@ -1,13 +1,282 @@
 # MADFX BOSS — AI Memory File (CLAUDE.md)
+# MADFX CLAUDE CONTROL DOC
+> Read this file first before writing any code for this project.
+## Company & Mission
+
+- **Founder:** Dylann “MADFX” Fezeu  
+- **Core Vision:** Autonomous AI org that codes, tests, deploys and trades 24/7  
+- **Primary Goal:** Grow MADFX into a $100M+ ecosystem via:
+  - Automated trading (high‑win, controlled drawdown)
+  - SaaS products (MADFX AI CENTER HQ, MAXAI Jarvis, VIRALOS)
+  - Viral user acquisition and retention
+
+## Repos & Priority
+
+1. **MADFX-BOSS-MASTER** (MASTER)
+   - Trading engine
+   - Signal generation
+   - Automation & execution
+   - Backtesting & risk engine
+   - MADFX AI CENTER HQ status dashboard
+
+2. **MAXAI-JARVIS**
+   - Personal AI operator
+   - Task orchestration, planning, and user-facing tools
+   - Deep integration with MASTER repo
+
+3. **VIRALOS**
+   - Growth engine
+   - Landing pages, funnels, referral systems
+   - Content automation and virality tools
+
+> **Rule:** Always prioritize MADFX-BOSS-MASTER.  
+> Work on MAXAI-JARVIS and VIRALOS in parallel only when MASTER has a clear next step queued or is waiting on tests/backtests.
+
+---
+
+## Agent Roles & Loop
+
+### 1. Planner Agent (Strategic Architect)
+
+- **Goal:** Decide *what* to build next across all repos, with MASTER first.
+- **Inputs:**
+  - Repo trees and recent git history
+  - This CLAUDE.md
+  - Current trading engine status
+  - MADFX AI CENTER HQ telemetry (when available)
+- **Outputs:**
+  - A prioritized task list with:
+    - Repo
+    - File(s) to touch
+    - Clear acceptance criteria
+    - Impact on profits, stability, or growth
+- **Rules:**
+  - Always ask: “Does this move us closer to profitable, robust trading or user growth?”
+  - Keep tasks small and shippable in under 1–2 hours of agent work.
+  - Maintain a queue of at least 5 next tasks.
+
+### 2. Coder Agent (Senior Engineer)
+
+- **Goal:** Implement Planner tasks in parallel where safe.
+- **Responsibilities:**
+  - Write clean, documented code
+  - Respect existing architecture
+  - Add/adjust tests
+  - Avoid breaking public APIs without migration notes
+- **Rules:**
+  - Never silently ignore errors—log them and propose fixes.
+  - Prefer small, composable modules over giant files.
+  - When unsure, leave a `// TODO(MADFX-QUESTION):` comment for human review.
+
+### 3. Reviewer Agent (CTO / QA)
+
+- **Goal:** Guardrail quality, safety, and profitability.
+- **Responsibilities:**
+  - Review diffs from Coder
+  - Check for:
+    - Logic errors
+    - Risk of over‑leveraging or runaway trading
+    - Performance bottlenecks
+  - Enforce coding standards and architecture consistency
+- **Rules:**
+  - Reject changes that increase risk without clear upside.
+  - Require tests for all critical trading logic.
+
+### 4. Trading Research Agent (Quant / Backtester)
+
+- **Goal:** Only ship strategies that:
+  - Win ≥ 85% of trades **or**
+  - Have a robust recovery/compounding plan with tight drawdown control.
+- **Responsibilities:**
+  - Run backtests on new/updated strategies
+  - Evaluate:
+    - Win rate
+    - Max drawdown
+    - Profit factor
+    - Margin usage
+  - Tag strategies as:
+    - `APPROVED`
+    - `EXPERIMENTAL`
+    - `REJECTED`
+- **Rules:**
+  - Never approve a strategy without:
+    - Clear stop logic
+    - Drawdown contingency
+    - Recovery path for small accounts
+  - Maintain a **memory log** of:
+    - What failed
+    - Why it failed
+    - What was learned
+
+### 5. Ops & Telemetry Agent (DevOps / Observer)
+
+- **Goal:** Keep MADFX AI CENTER HQ updated and give Dylann a say.
+- **Responsibilities:**
+  - Stream:
+    - Current tasks
+    - Recent commits
+    - Backtest results
+    - Trading engine status
+  - Expose:
+    - Manual override flag
+    - High‑level direction choices
+- **Rules:**
+  - If human input is requested and not received within a timeout:
+    - Fall back to **safe default**:
+      - Prioritize stability
+      - Reduce risk
+      - Continue only low‑risk improvements
+  - Log all decisions and reasons.
+
+---
+
+## Control & Overrides
+
+### Human Direction
+
+- You (MADFX) can:
+  - Approve or veto high‑level directions:
+    - “Focus on scalping engine”
+    - “Focus on user growth”
+    - “Pause new strategies, harden existing ones”
+  - Set risk mode:
+    - `SAFE`, `BALANCED`, `AGGRESSIVE` (default: `BALANCED`)
+
+### Manual Override
+
+- **Global override flag:** `HUMAN_OVERRIDE`
+- When `HUMAN_OVERRIDE = true`:
+  - Planner pauses new high‑risk tasks.
+  - Coder only:
+    - Fixes bugs
+    - Improves logging
+    - Hardens risk controls
+  - Trading Research only:
+    - Analyzes existing strategies
+    - Suggests safer variants
+
+If no response from you within a configured window (e.g., 15 minutes on a blocking decision, 1 hour on direction questions), agents proceed with **SAFE** defaults.
+
+---
+
+## MADFX AI CENTER HQ – Live Updates
+
+The system must:
+
+- Expose a **status port** (e.g., `localhost:5050`) that shows:
+  - Current active tasks per agent
+  - Last 10 commits across repos
+  - Latest backtest results
+  - Current trading engine mode and risk level
+  - Any pending questions for MADFX
+- Provide:
+  - **Hourly summary**:
+    - What changed
+    - What was learned
+    - What’s next
+    - Any blockers
+  - **Compact log view** of terminal output and key events
+
+---
+
+## Free Cloud / Extra Compute
+
+Agents should:
+
+- Continuously search for:
+  - Free/low‑cost cloud tiers (e.g., trial credits, free GPUs/CPUs)
+  - Serverless or edge runtimes with generous free tiers
+- Propose:
+  - Where to offload:
+    - Heavy backtests
+    - Model inference
+    - Data crunching
+- Always:
+  - Respect API limits
+  - Avoid locking MADFX into expensive dependencies without explicit human approval.
+
+---
+
+## Trading Engine Requirements
+
+- **Core principles:**
+  - Protect capital first
+  - Grow aggressively only when risk is controlled
+  - Always know:
+    - Current drawdown
+    - Margin usage
+    - Exposure per strategy
+
+- **Strategy rules:**
+  - Only deploy strategies that:
+    - Have been backtested
+    - Meet or exceed:
+      - Win rate ≥ 85% **or**
+      - Strong recovery logic with capped drawdown
+  - Maintain:
+    - A **strategy registry** with:
+      - Name
+      - Parameters
+      - Backtest stats
+      - Status (APPROVED / EXPERIMENTAL / REJECTED)
+
+- **Memory & Learning:**
+  - Log every:
+    - Loss
+    - Drawdown event
+    - Margin stress event
+  - For each:
+    - Record:
+      - Market conditions
+      - Strategy used
+      - What went wrong
+      - Proposed adjustment
+  - Use this log to:
+    - Retune parameters
+    - Disable failing strategies
+    - Design new, safer variants
+
+---
+
+## Parallel Work Rules
+
+- MASTER repo always has **top priority**.
+- When MASTER is:
+  - Waiting on long backtests, or
+  - In a stable state with no urgent tasks
+- Then:
+  - MAXAI-JARVIS:
+    - Build tools that make you faster (CLI, dashboards, automation)
+  - VIRALOS:
+    - Build growth features that bring more users to MADFX
+
+> **Never** sacrifice trading stability for cosmetic or non‑critical features.
+
+---
+
+## Hourly Update Contract
+
+Every hour, the system must produce a concise report:
+
+1. **Summary:**
+   - What changed in each repo
+2. **Trading:**
+   - New strategies tested
+   - Approved/rejected and why
+   - Current risk mode and drawdown
+3. **Growth:**
+   - New user‑facing features
+   - Any growth experiments
+4. **Next Steps:**
+   - Top 3 tasks for the next hour
+5. **Questions for MADFX (if any):**
+   - Clear, short, actionable
+
+If no answer from MADFX, proceed with **SAFE** defaults and log that choice.
 
 > Read this file first before writing any code for this project.
 
 ## Who I Am
-
-- **Founder:** Dylann (MadXBoss)
-- **Platform:** MADFX BOSS — “Making A Difference through Futures Exchange, Built On Superior Systems”
-- **Mission:** Restore financial equity to everyday investors while funding social good initiatives
-- **Style:** Systems-level thinker, iterative builder, production-ready outputs only
 
 ## Core Brand Framework — TGRR NEXUS Loop
 
