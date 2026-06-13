@@ -2,7 +2,7 @@ name: Backtest Runner
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # Every 6 hours
+    - cron: '*/30 * * * *'  # Every 30 minutes
   workflow_dispatch:      # Allow manual triggering
 
 jobs:
@@ -29,6 +29,44 @@ jobs:
       with:
         name: backtest-results
         path: backtest/results/
+        
+    - name: Post results to Telegram
+      if: always()
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      run: |
+        # Only post if Telegram credentials are configured
+        if [ -n "$TELEGRAM_BOT_TOKEN" ] && [ -n "$TELEGRAM_CHAT_ID" ]; then
+          # Get the workflow run URL
+          WORKFLOW_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          
+          # Create message with status
+          if [ "${{ job.status }}" = "success" ]; then
+            STATUS_EMOJI="✅"
+            STATUS_TEXT="Success"
+          else
+            STATUS_EMOJI="❌"
+            STATUS_TEXT="Failed"
+          fi
+          
+          MESSAGE="${STATUS_EMOJI} MADFX BOSS Backtest ${STATUS_TEXT}
+          
+          Repository: ${{ github.repository }}
+          Branch: ${{ github.ref_name }}
+          Commit: ${{ github.sha }}
+          
+          Run Details: ${WORKFLOW_URL}"
+          
+          # Send to Telegram
+          curl -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -H 'Content-Type: application/json' \
+            -d "{
+              \"chat_id\": \"${TELEGRAM_CHAT_ID}\",
+              \"text\": \"${MESSAGE}\",
+              \"parse_mode\": \"HTML\"
+            }"
+        fi
         
     - name: Post results to Slack/Webhook (if configured)
       if: always()
